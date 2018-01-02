@@ -3,6 +3,7 @@
 #define INTERFACE_H
 
 #include <ncurses.h>
+#include <string>
 
 class interface {
     public:
@@ -13,12 +14,15 @@ class interface {
         
         void draw (void);
         
+        void scr (int amount);
+        
         int getchar (void);
         
         void quit (void);
         
-        static int pos_x;
-        static int pos_y;
+        static int cur_line;
+        static int cur_col;
+        static int top_line;
 };
 
 #endif

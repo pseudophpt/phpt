@@ -8,8 +8,10 @@ class buffer {
     public:
         static std::vector<std::string> text_buffer;
         buffer (void);
-        void new_line (int line, std::string init_string);
         void insert_char (int line, int column, char c);
+        void delete_char (int line, int column);
+        void insert_line (int pos, std::string init_string);
+        void delete_line (int line);
         void init (void);
 }; 
 

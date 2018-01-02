@@ -11,6 +11,9 @@ int main()
         handle h;
         h.init();
         
+        buffer b;
+        b.init();
+        
         while (h.handle_char(i.getchar())); 
         i.quit();
     }
