@@ -93,12 +93,22 @@ void interface::draw (void) {
         
         /* Print all characters in the buffer until we go off screen */
         for (int i = top_line; (i < b.text_buffer.size()) && (getcury(stdscr) < (maxy - 2)); i ++) {
-            std::string line_no = "  " + std::to_string(i + 1) + " ";
+            std::string line_no = "     ";
+            std::string no = std::to_string(i);
+            line_no.replace(4 - no.size(), no.size(), no);
+            
             std::string line = b.text_buffer[i];
             
+            bool is_cur_line = (i == cur_line);
+            
+            if (is_cur_line)
+                attron(COLOR_PAIR(2));
             attron(A_BOLD);
             addstr (line_no.c_str());
             attroff(A_BOLD);
+            if (is_cur_line)
+                attron(COLOR_PAIR(1));
+            addch(' ');
             addstr (line.c_str());
             addch ('\n');
         }
@@ -109,7 +119,7 @@ void interface::draw (void) {
         /* Logo */
         attron(COLOR_PAIR(3));
         
-        std::string name = "phpt-2.00";
+        std::string name = "phpt-2.10";
         
         addch(' ');
         
