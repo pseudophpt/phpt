@@ -21,6 +21,7 @@ void interface::init (void) {
     init_pair (1, 7, 0); /* White on black, default */
     init_pair (2, 0, 7); /* Black on white, bottom bar */
     init_pair (3, 7, 1); /* White on red, logo */
+    init_pair (4, 7, 2); /* White on cyan, line and column numbers */
 
     attron(COLOR_PAIR(1));
     
@@ -141,7 +142,7 @@ void interface::draw (void) {
         /* Logo */
         attron(COLOR_PAIR(3));
         
-        std::string name = "phpt-2.20";
+        std::string name = "phpt-2.30";
         
         addch(' ');
         
@@ -156,8 +157,8 @@ void interface::draw (void) {
         
         addch(' ');
         
-        /* Black on white */
-        attron(COLOR_PAIR(2));
+        /* Cyan on white */
+        attron(COLOR_PAIR(4));
         
         addch(' ');
         
@@ -169,6 +170,18 @@ void interface::draw (void) {
         
         addch('C');
         addstr(std::to_string(cur_col + 1).c_str());
+        
+        addch(' ');
+        
+        attron(COLOR_PAIR(2));
+        
+        addch(' ');
+        
+        /* Input */
+        {
+            handle h;
+            addstr(h.in.c_str());
+        }
         
         /* Fill rest of space */
         for (int i = getcurx(stdscr); i < getmaxx(stdscr); i ++) {

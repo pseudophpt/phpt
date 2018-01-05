@@ -4,9 +4,26 @@
 
 handle::handler *handle::h;
 std::string handle::clipboard;
+std::string handle::in;
+int handle::input::command;
 
 /* Constructor for modify class */
 handle::modify::modify (void) {
+
+}
+
+/* Constructor for command class */
+handle::command::command (void) {
+
+}
+
+/* Constructor for modify class */
+handle::input::input (int c) {
+    command = c; 
+}
+
+/* Constructor for handle class */
+handle::handle (void) {
 
 }
 
@@ -18,8 +35,88 @@ std::string handle::command::get_name (void) {
     return "COMMAND";
 }
 
+std::string handle::input::get_name (void) {
+    return "INPUT";
+}
+
 std::string handle::get_name (void) {
     return h->get_name();
+}
+
+void handle::init (void) {
+    /* Default handler is command */
+    handle::h = new command;
+    
+    /* Init clipboard and input */
+    clipboard = "";
+    in= "";
+}
+
+/* Input handler. Calls current handler */
+int handle::handle_char (int c) {
+    /* Call respective handler */
+    return h->handle_char(c);
+}
+
+/* Sets input handler */
+void handle::set_handler (handler *new_h) {
+    /* Set handler */
+    delete h;
+    h = new_h;
+}
+
+void handle::input::perform (int c, std::string i) {
+    switch (c) {
+        case 'y':
+            {
+                buffer b;
+                
+                std::vector<std::string> tokens;
+                std::istringstream iss(i.c_str());
+                
+                for (std::string s; iss >> s; )
+                    tokens.push_back(s);
+                
+                if (tokens.size() < 2)
+                    return;
+                
+                std::string find = tokens[0];
+                std::string replace = tokens[1];
+                
+                for (std::string &s : b.text_buffer) {
+                    boost::replace_all(s, find, replace);
+                }   
+            }
+            break;
+    }
+}
+
+/* Handler for input mode */
+int handle::input::handle_char (int c) {
+    switch (c) {
+        case '\n':
+            {
+                handle h;
+                
+                h.set_handler (new handle::command);
+                perform(command, in);
+                in = "";
+                
+            }
+            break;
+        case KEY_BACKSPACE:
+            if (in.size() > 0)
+                in.pop_back();
+            break;
+        default:
+            in.push_back(c);
+            break; 
+    }
+    {
+        interface i;
+        i.draw();
+    }
+    return 1;
 }
 
 /* Handler for modify mode */
@@ -151,10 +248,6 @@ int handle::modify::handle_char (int c) {
     return 1;
 }
 
-/* Constructor for command class */
-handle::command::command (void) {
-
-}
 
 /* Handler for command mode */
 int handle::command::handle_char (int c) {
@@ -262,7 +355,13 @@ int handle::command::handle_char (int c) {
                 
                 i.cur_line = b.text_buffer.size() - 1;
                 i.cur_col = b.text_buffer[i.cur_line].size();   
-            }       
+            }  
+            break;     
+        case 'y':
+            {
+                handle h;
+                h.set_handler(new handle::input('y'));
+            }
     }
     {
         interface i;
@@ -272,29 +371,5 @@ int handle::command::handle_char (int c) {
     return 1; 
 }
 
-/* Constructor for handle class */
-handle::handle (void) {
-}
-
-void handle::init (void) {
-    /* Default handler is modify */
-    handle::h = new modify;
-    
-    /* Init clipboard */
-    clipboard = "";
-}
-
-/* Input handler. Calls current handler */
-int handle::handle_char (int c) {
-    /* Call respective handler */
-    return h->handle_char(c);
-}
-
-/* Sets input handler */
-void handle::set_handler (handler *new_h) {
-    /* Set handler */
-    delete h;
-    h = new_h;
-}
 
 
