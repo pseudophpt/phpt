@@ -109,7 +109,29 @@ void interface::draw (void) {
             if (is_cur_line)
                 attron(COLOR_PAIR(1));
             addch(' ');
-            addstr (line.c_str());
+            
+            
+            if (is_cur_line) {
+                /* Last character */
+                line.append(" ");
+                /* C version */
+                const char *str_line = line.c_str();
+                /* If the current column is 0, it should be selected */
+                if (cur_col == 0)
+                    attron(COLOR_PAIR(2));
+                /* For each character, add it, and if it's the current characer set the attribute */
+                for (int i = 0; i < line.size(); i ++) {
+                    if (i == cur_col)
+                        attron(COLOR_PAIR(2));
+                    
+                    addch(str_line[i]);
+                    attron(COLOR_PAIR(1));
+                }
+            }
+            else {
+                const char *str_line = line.c_str();
+                addstr (str_line); 
+            }
             addch ('\n');
         }
         
@@ -119,7 +141,7 @@ void interface::draw (void) {
         /* Logo */
         attron(COLOR_PAIR(3));
         
-        std::string name = "phpt-2.10";
+        std::string name = "phpt-2.20";
         
         addch(' ');
         

@@ -65,6 +65,39 @@ int handle::modify::handle_char (int c) {
                 i.move_y(1);
             }
             break;
+        case '{':
+            {
+                buffer b;
+                interface i;
+                
+                b.insert_char(i.cur_line, i.cur_col, '{');
+                b.insert_char(i.cur_line, i.cur_col + 1, '}');
+                
+                i.move_x(1);
+            }
+            break;
+        case '(':
+            {
+                buffer b;
+                interface i;
+                
+                b.insert_char(i.cur_line, i.cur_col, '(');
+                b.insert_char(i.cur_line, i.cur_col + 1, ')');
+                
+                i.move_x(1);
+            }
+            break;
+        case '[':
+            {
+                buffer b;
+                interface i;
+                
+                b.insert_char(i.cur_line, i.cur_col, '[');
+                b.insert_char(i.cur_line, i.cur_col + 1, ']');
+                
+                i.move_x(1);
+            }
+            break;
         case KEY_PPAGE:
             {
                 interface i;
@@ -84,6 +117,19 @@ int handle::modify::handle_char (int c) {
                 
                 b.delete_char(i.cur_line, i.cur_col - 1);
                 i.move_x(-1);
+            }
+            break;
+        /* Tab */
+        case 9:
+            {
+                buffer b;
+                interface i;
+                
+                for (int j = 0; j < 4; j ++) {
+                    b.insert_char(i.cur_line, i.cur_col, ' ');
+                }   
+                
+                i.move_x(4);
             }
             break;
         default:
@@ -150,6 +196,7 @@ int handle::command::handle_char (int c) {
         case 'q':
             return 0;
             break;
+            
         case 'u':
             {
                 buffer b;
