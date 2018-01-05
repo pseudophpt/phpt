@@ -23,7 +23,3 @@ Command mode allows you to do many fast operations
 * `q` to quit
 
 Press `F1` to enter this mode 
-
-### License
-
-phpt is released under GPLv3 by pseudophpt
