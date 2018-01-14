@@ -5,14 +5,19 @@
 #include <string>
 
 class buffer {
-    public:
+    private:
         static std::vector<std::string> text_buffer;
+    public:
         buffer (void);
-        void insert_char (int line, int column, char c);
-        void delete_char (int line, int column);
-        void insert_line (int pos, std::string init_string);
-        void delete_line (int line);
         void init (void);
-}; 
+        void delete_char (int line, int column);
+        void insert_char (int line, int column, char c);
+        void insert_line (int line, int column);
+        void delete_line (int line);
+        int get_size (void);
+        int get_line_size (int line);
+        
+        std::vector<std::string> get_text_buffer (void);
+};
 
 #endif

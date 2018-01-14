@@ -1,32 +1,158 @@
 #include "handle.h"
-#include "interface.h"
 #include "buffer.h"
+#include "interface.h"
+#include "control.h"
 
-handle::handler *handle::h;
+/* Variables */
 std::string handle::clipboard;
 std::string handle::in;
-int handle::input::command;
+handle::handler *handle::h;
 
-/* Constructor for modify class */
-handle::modify::modify (void) {
+std::unordered_map<int, std::function<int(void)>> handle::command::handle_map;
+std::unordered_map<int, std::function<int(void)>> handle::modify::handle_map;
 
+/* Helper interaction functions */
+
+/* Mode setters */
+int handle::set_modify (void) {
+    set_handler (new modify); 
+    return 1; 
 }
 
-/* Constructor for command class */
-handle::command::command (void) {
-
+int handle::set_command (void) {
+    set_handler (new command); 
+    return 1; 
 }
 
-/* Constructor for modify class */
-handle::input::input (int c) {
-    command = c; 
+/* Actions */
+int handle::backspace (void) {
+    buffer b;
+    control c;
+    
+    /* Get position */
+    int line = c.get_cur_line();
+    int col = c.get_cur_col();
+    
+    /* Delete previous character */
+    b.delete_char(line, col - 1);
+    
+    return 1;
 }
 
-/* Constructor for handle class */
-handle::handle (void) {
-
+int handle::del (void) {
+    control c;
+    
+    c.move_x(1);
+    return backspace();
 }
 
+int handle::enter (void) {
+    buffer b;
+    control c;
+    
+    /* Get position */
+    int line = c.get_cur_line();
+    int col = c.get_cur_col();
+    
+    int size = b.get_line_size(line);
+ 
+    /* Insert line */   
+    b.insert_line(line, col);
+    
+    c.move_y(1);
+    c.move_x(-size);
+    
+    return 1;
+}
+
+
+int handle::move_up (void) 
+{
+    control c;
+    c.move_y(-1); 
+    return 1;
+}
+
+int handle::move_down (void) 
+{
+    control c;
+    c.move_y(1); 
+    return 1;
+}
+
+int handle::move_left (void) 
+{
+    control c;
+    c.move_x(-1); 
+    return 1;
+}
+
+int handle::move_right (void) 
+{
+    control c;
+    c.move_x(1); 
+    return 1;
+}
+
+/* This initializes all handling functions */
+void handle::init (void) {
+    /* Set the handler to command, default */
+    h = new command;
+    
+    /* Set modes */
+    command::handle_map[KEY_F(1)] = set_command;
+    
+    command::handle_map[KEY_F(1)] = set_command;
+    command::handle_map[KEY_F(2)] = set_modify;
+    
+    modify::handle_map[KEY_F(2)] = set_command;
+    modify::handle_map[KEY_F(2)] = set_modify;
+    
+    /* Simple actions */
+    modify::handle_map[KEY_DC] = del;
+    modify::handle_map['\n'] = enter;
+    
+    command::handle_map[KEY_DC] = del;
+    command::handle_map['\n'] = enter;
+    
+    /*  Navigation */
+    modify::handle_map[KEY_UP] = move_up;
+    modify::handle_map[KEY_DOWN] = move_down;
+    modify::handle_map[KEY_LEFT] = move_left;
+    modify::handle_map[KEY_RIGHT] = move_right;
+    
+    command::handle_map[KEY_UP] = move_up;
+    command::handle_map[KEY_DOWN] = move_down;
+    command::handle_map[KEY_LEFT] = move_left;
+    command::handle_map[KEY_RIGHT] = move_right;
+    
+    command::handle_map['l'] = move_up;
+    command::handle_map['k'] = move_down;
+    command::handle_map['j'] = move_left;
+    command::handle_map[';'] = move_right;
+}
+
+/* This sets the handler */
+void handle::set_handler (handler *new_h) {
+    /* De-allocate the old handler */
+    delete h;
+    /* Set the new one */
+    h = new_h;
+}
+
+/* This function calls the current handler, to handle user input */
+int handle::handle_char (int c) {
+    /* Call respective handler */
+    return h->handle_char(c);
+}
+
+/* This function calls the respective get_name function to get the current handler name */
+std::string handle::get_name (void) {
+    /* Call respective get_name() */
+    return h->get_name();
+}
+
+/* Get the names of each handler */
 std::string handle::modify::get_name (void) {
     return "MODIFY";
 }
@@ -39,337 +165,82 @@ std::string handle::input::get_name (void) {
     return "INPUT";
 }
 
-std::string handle::get_name (void) {
-    return h->get_name();
-}
-
-void handle::init (void) {
-    /* Default handler is command */
-    handle::h = new command;
-    
-    /* Init clipboard and input */
-    clipboard = "";
-    in= "";
-}
-
-/* Input handler. Calls current handler */
-int handle::handle_char (int c) {
-    /* Call respective handler */
-    return h->handle_char(c);
-}
-
-/* Sets input handler */
-void handle::set_handler (handler *new_h) {
-    /* Set handler */
-    delete h;
-    h = new_h;
-}
-
-void handle::input::perform (int c, std::string i) {
-    switch (c) {
-        case 'y':
-            {
-                buffer b;
-                
-                std::vector<std::string> tokens;
-                std::istringstream iss(i.c_str());
-                
-                for (std::string s; iss >> s; )
-                    tokens.push_back(s);
-                
-                if (tokens.size() < 2)
-                    return;
-                
-                std::string find = tokens[0];
-                std::string replace = tokens[1];
-                
-                for (std::string &s : b.text_buffer) {
-                    boost::replace_all(s, find, replace);
-                }   
-            }
-            break;
-    }
-}
-
-/* Handler for input mode */
-int handle::input::handle_char (int c) {
-    switch (c) {
-        case '\n':
-            {
-                handle h;
-                
-                h.set_handler (new handle::command);
-                perform(command, in);
-                in = "";
-                
-            }
-            break;
-        case KEY_BACKSPACE:
-            if (in.size() > 0)
-                in.pop_back();
-            break;
-        default:
-            in.push_back(c);
-            break; 
-    }
-    {
-        interface i;
-        i.draw();
-    }
-    return 1;
-}
-
-/* Handler for modify mode */
-int handle::modify::handle_char (int c) {
-    switch (c) {
-        case KEY_UP:
-            {
-                interface i;
-                i.move_y(-1);
-            }
-            break;
-        case KEY_DOWN:
-            {
-                interface i;
-                i.move_y(1);
-            }
-            break;
-        case KEY_LEFT:
-            {
-                interface i;
-                i.move_x(-1);
-            }
-            break;
-        case KEY_RIGHT:
-            {
-                interface i;
-                i.move_x(1);
-            }
-            break;
-        case KEY_F(1):
-            {
-                handle h;
-                h.set_handler(new handle::command);
-            }
-            break;
-        case '\n':
-            {
-                buffer b;
-                interface i;
-                
-                std::string empty = "";
-                b.insert_line(i.cur_line + 1, empty);
-                i.move_y(1);
-            }
-            break;
-        case '{':
-            {
-                buffer b;
-                interface i;
-                
-                b.insert_char(i.cur_line, i.cur_col, '{');
-                b.insert_char(i.cur_line, i.cur_col + 1, '}');
-                
-                i.move_x(1);
-            }
-            break;
-        case '(':
-            {
-                buffer b;
-                interface i;
-                
-                b.insert_char(i.cur_line, i.cur_col, '(');
-                b.insert_char(i.cur_line, i.cur_col + 1, ')');
-                
-                i.move_x(1);
-            }
-            break;
-        case '[':
-            {
-                buffer b;
-                interface i;
-                
-                b.insert_char(i.cur_line, i.cur_col, '[');
-                b.insert_char(i.cur_line, i.cur_col + 1, ']');
-                
-                i.move_x(1);
-            }
-            break;
-        case KEY_PPAGE:
-            {
-                interface i;
-                i.scr(-1);
-            }
-            break;
-        case KEY_NPAGE:
-            {
-                interface i;
-                i.scr(1);
-            }
-            break;
-        case KEY_BACKSPACE:
-            {
-                buffer b;
-                interface i; 
-                
-                b.delete_char(i.cur_line, i.cur_col - 1);
-                i.move_x(-1);
-            }
-            break;
-        /* Tab */
-        case 9:
-            {
-                buffer b;
-                interface i;
-                
-                for (int j = 0; j < 4; j ++) {
-                    b.insert_char(i.cur_line, i.cur_col, ' ');
-                }   
-                
-                i.move_x(4);
-            }
-            break;
-        default:
-            {
-                /* Set up buffer and interface */
-                buffer b;
-                interface i;
-                
-                b.insert_char (i.cur_line, i.cur_col, (char)c);
-                /* Next character */
-                i.move_x(1);
-            }
-            break; 
-    }    
-    {
-        interface i;
-        i.draw ();
-    }
-    return 1;
-}
-
-
-/* Handler for command mode */
+/* Handles user input in each mode */ 
 int handle::command::handle_char (int c) {
-    switch(c) {
-        case 'k':
-        case KEY_UP:
-            {
-                interface i;
-                i.move_y(-1);
-            }
-            break;
-        case 'l':
-        case KEY_DOWN:
-            {
-                interface i;
-                i.move_y(1);
-            }
-            break;
-        case 'j':
-        case KEY_LEFT:
-            {
-                interface i;
-                i.move_x(-1);
-            }
-            break;
-        case ';':
-        case KEY_RIGHT:
-            {
-                interface i;
-                i.move_x(1);
-            }
-            break;
-        case KEY_F(2):
-            {
-                handle h;
-                h.set_handler(new handle::modify);
-            }
-            break;
-        case 'q':
-            return 0;
-            break;
-            
-        case 'u':
-            {
-                buffer b;
-                interface i;
-                
-                clipboard = b.text_buffer[i.cur_line];
-                
-            }
-            break;
-        case 'i':
-            {
-                buffer b;
-                interface i;
-                
-                clipboard = b.text_buffer[i.cur_line];
-                b.delete_line(i.cur_line);
-            }
-            break; 
-        case 'o':
-            {
-                buffer b;
-                interface i;
-                
-                b.insert_line(i.cur_line + 1, clipboard);
-            }
-            break;
-        case 'p':
-            {
-                buffer b;
-                interface i; 
-                
-                b.delete_line(i.cur_line);
-                b.insert_line(i.cur_line, clipboard);
-            }
-            break;
-        case '7':
-            {
-                interface i;
-                
-                i.cur_col = 0;
-                i.cur_line = 0;
-            }
-            break;
-        case '8':
-            {
-                interface i;
-                
-                i.cur_col = 0;
-            }
-            break;
-        case '9':
-            {
-                interface i;
-                buffer b;
-                
-                i.cur_col = b.text_buffer[i.cur_line].size();
-            }
-            break;
-        case '0':
-            {   
-                interface i;
-                buffer b;
-                
-                i.cur_line = b.text_buffer.size() - 1;
-                i.cur_col = b.text_buffer[i.cur_line].size();   
-            }  
-            break;     
-        case 'y':
-            {
-                handle h;
-                h.set_handler(new handle::input('y'));
-            }
+    interface i;
+    control ct;
+    buffer b;
+    
+    int cur_line = ct.get_cur_line();
+    int cur_col = ct.get_cur_col();
+    int top_line = ct.get_top_line();
+    
+    int ret = 0;
+    
+    /* Find handler for c */
+    auto it = handle_map.find(c);
+    /* If it exists, run it */
+    if (it != handle_map.end()) {
+        ret = it->second();
     }
-    {
-        interface i;
-        i.draw();
-    }    
- 
-    return 1; 
+    
+    if (ret) {
+        std::vector<std::string> text_buffer = b.get_text_buffer();
+        cur_col = ct.get_cur_col();
+        cur_line = ct.get_cur_line();
+        top_line = ct.get_top_line();
+        
+        i.draw(text_buffer, cur_line, cur_col, top_line);
+    }
+    
+    return ret;
 }
 
+int handle::input::handle_char (int c) {
+    return 1;
+}
 
+/* Handle character input in modify mode */
+int handle::modify::handle_char (int c) {
+    interface i;
+    control ct;
+    buffer b;
+    
+    int cur_line = ct.get_cur_line();
+    int cur_col = ct.get_cur_col();
+    int top_line = ct.get_top_line();
+    
+    /* Return value */
+    int ret = 0;
+    
+    /* Normal characters  */
+    if ((c > 31) && (c < 127)) {
+        
+        b.insert_char(cur_line, cur_col, c);
+        ct.move_x(1);
+        
+        ret = 1;
+    }
+    
+    /* Handled characters */
+    else {
+        /* Find handler for c */
+        auto it = handle_map.find(c);
+        /* If it exists, run it */
+        if (it != handle_map.end()) {
+            ret = it->second();
+        }
+    }
+    
+    if (ret) {
+        std::vector<std::string> text_buffer = b.get_text_buffer();
+        cur_col = ct.get_cur_col();
+        cur_line = ct.get_cur_line();
+        top_line = ct.get_top_line();
+        
+        i.draw(text_buffer, cur_line, cur_col, top_line);
+    }    
+    
+    return ret;
+}
 

@@ -1,8 +1,10 @@
 #include "interface.h"
 #include "buffer.h"
 #include "handle.h"
+#include "control.h"
+#include <iostream>
 
-int main()
+int main(void)
 {	
     {
         interface i;
@@ -13,6 +15,9 @@ int main()
         
         buffer b;
         b.init();
+        
+        control c;
+        c.init();
         
         while (h.handle_char(i.getchar())); 
         i.quit();
