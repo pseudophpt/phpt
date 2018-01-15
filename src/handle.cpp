@@ -214,7 +214,7 @@ void handle::init (void) {
     command::handle_map['9'] = end_line;
     command::handle_map['0'] = end_buffer;
     
-    
+    command::handle_map['q'] = quit;    
 }
 
 /* This sets the handler */
@@ -260,7 +260,7 @@ int handle::command::handle_char (int c) {
     int cur_col = ct.get_cur_col();
     int top_line = ct.get_top_line();
     
-    int ret = 0;
+    int ret = 1;
     
     /* Find handler for c */
     auto it = handle_map.find(c);
@@ -296,7 +296,7 @@ int handle::modify::handle_char (int c) {
     int top_line = ct.get_top_line();
     
     /* Return value */
-    int ret = 0;
+    int ret = 1;
     
     /* Find handler for c */
     auto it = handle_map.find(c);

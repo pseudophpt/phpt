@@ -28,6 +28,8 @@ class handle
         static int start_buffer (void);
         static int end_buffer (void);
         
+        static int quit (void) { return 0; }
+        
         class handler {
             public:
                 handler (void) {  }
