@@ -6,6 +6,8 @@
 #include <string>
 
 class interface {
+    private:
+        std::string format_line_number (int line_number);
     public:
         interface (void) {  }
         

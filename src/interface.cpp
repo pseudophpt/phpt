@@ -36,14 +36,42 @@ int interface::getchar (void) {
     return ch;
 }
 
+/* Gives formatted string of the current line number */
+std::string interface::format_line_number (int line) {
+    /* Formatted string output */
+    std::string formatted = "";
+    
+    /* Current line string */
+    std::string line_number = std::to_string (line);
+    
+    /* Padding */
+    for (int j = 0; j < (5 - line_number.size()); j ++)
+        formatted.push_back(' ');
+    
+    /* Add line number itself */
+    formatted.append(line_number);
+    
+    /* Final padding */
+    formatted.push_back(' ');
+    
+    return formatted;
+}
+
+//void interface::draw_line (int line)
+
 void interface::draw (std::vector<std::string> buffer, int cur_line, int cur_col, int top_line) {
     clear();
     attron(COLOR_PAIR(0));
+    
     for (int i = 0; i < buffer.size(); i ++) {
+        addstr(format_line_number(i).c_str());
+        
+        /* If it's the current line, get ready to highlight */
         if (i == cur_line) {
             /* Add filler character if it's the selected line */
             buffer[i].push_back(' ');
             
+            /* For each character in line, add it. If it's selected, set the attribute */
             for (int j = 0; j < buffer[i].size(); j ++) {
                 attron(COLOR_PAIR(1));
                 if (j == cur_col)
