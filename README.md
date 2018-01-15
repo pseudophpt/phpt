@@ -28,12 +28,15 @@ Press `F1` to enter this mode
 
 ## Updates
 
+#### 3.10
+* Add cursor
+* Fix word movement
+
 #### 3.00
 * Complete rewrite
 * Enters fixed
 * Use unordered map instead of switch cases for customizability
 * Add word movement
-
 
 #### 2.30
 
