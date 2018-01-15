@@ -1,20 +1,18 @@
-# phpt
-
-## Usage
+# Usage
 
 `./bin/phpt-<ver>`
 
-## Controls
+# Controls
 
-#### Modify
+### Modify
 
 Modify mode is your standard text editing mode. Type to enter text, arrow keys to navigate. Press `F2` to enter this mode
 
-#### Input
+### Input
 
 In this mode, anything you type will be put in the bottom bar. When you press enter, it passes this command to whatever brought you.
 
-#### Command
+### Command
 
 Command mode allows you to do many fast operations
 
@@ -26,40 +24,40 @@ Command mode allows you to do many fast operations
 
 Press `F1` to enter this mode 
 
-## Updates
+# Updates
 
-#### 3.10
+### 3.10
 * Add cursor
 * Fix word movement
 ###### r1 (3.11)
 * Add quit button
 
-#### 3.00
+### 3.00
 * Complete rewrite
 * Enters fixed
 * Use unordered map instead of switch cases for customizability
 * Add word movement
 
-#### 2.30
+### 2.30
 
 * Add updates (kind of meta, huh?)
 * Add input mode
 * Add find and replace
 
-#### 2.20
+### 2.20
 
 * Add cursor, more
 
-#### 2.10
+### 2.10
 
 * Added highlighted line, more segfaults fixed
 
-#### 2.00
+### 2.00
 
 * Added line numbering, status bar
 * Fixed various issues with segfaults
 
-#### 1.00
+### 1.00
 
 * Initial
 * Simple text editing
