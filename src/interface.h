@@ -8,6 +8,7 @@
 class interface {
     private:
         std::string format_line_number (int line_number);
+        void draw_line (std::string line, int line_no, int cur_line, int cur_col);
     public:
         interface (void) {  }
         
