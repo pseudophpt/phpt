@@ -29,8 +29,12 @@ Press `F1` to enter this mode
 ### 3.10
 * Add cursor
 * Fix word movement
+
 ###### r1 (3.11)
 * Add quit button
+
+###### r2 (3.13)
+* Add line numbers
 
 ### 3.00
 * Complete rewrite
