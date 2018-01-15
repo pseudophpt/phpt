@@ -38,8 +38,21 @@ int interface::getchar (void) {
 
 void interface::draw (std::vector<std::string> buffer, int cur_line, int cur_col, int top_line) {
     clear();
-    for (std::string s : buffer) {
-        addstr (s.c_str());
+    attron(COLOR_PAIR(0));
+    for (int i = 0; i < buffer.size(); i ++) {
+        if (i == cur_line) {
+            /* Add filler character if it's the selected line */
+            buffer[i].push_back(' ');
+            
+            for (int j = 0; j < buffer[i].size(); j ++) {
+                attron(COLOR_PAIR(1));
+                if (j == cur_col)
+                    attron(COLOR_PAIR(2));
+                addch(buffer[i][j]);
+            }
+        }
+        else addstr (buffer[i].c_str());
+        attron(COLOR_PAIR(1));
         addch ('\n');
     }
     addstr(std::to_string(cur_line).c_str());
