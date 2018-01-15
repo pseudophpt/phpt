@@ -33,8 +33,11 @@ Press `F1` to enter this mode
 ###### r1 (3.11)
 * Add quit button
 
-###### r2 (3.13)
+###### r2 (3.12)
 * Add line numbers
+
+###### r3 (3.13)
+* Add line number highlighting, clean up `interface.cpp`
 
 ### 3.00
 * Complete rewrite
