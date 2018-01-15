@@ -24,6 +24,10 @@ class control {
         int get_cur_line (void);
         int get_cur_col (void);
         int get_top_line (void);
+        
+        void set_cur_line (int cur_line);
+        void set_cur_col (int cur_col);
+        void set_top_line (int top_line);
 };
 
 #endif

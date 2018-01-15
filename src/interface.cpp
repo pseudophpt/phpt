@@ -45,7 +45,7 @@ void interface::draw (std::vector<std::string> buffer, int cur_line, int cur_col
     addstr(std::to_string(cur_line).c_str());
     addch('\n');
     addstr(std::to_string(cur_col).c_str());
-
+   
     /* Refresh screen and clear for next frame */
     refresh();
 }

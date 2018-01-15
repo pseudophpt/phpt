@@ -21,6 +21,13 @@ class handle
         static int move_left (void); 
         static int move_right (void); 
         
+        static int next_word (void);
+        static int prev_word (void);
+        static int start_line (void);
+        static int end_line (void);
+        static int start_buffer (void);
+        static int end_buffer (void);
+        
         class handler {
             public:
                 handler (void) {  }

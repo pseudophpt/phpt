@@ -27,6 +27,19 @@ int control::get_top_line (void) {
     return top_line;
 }
 
+/* Setters */
+void control::set_cur_line (int cur_line) {
+    this->cur_line = cur_line;
+}
+
+void control::set_cur_col (int cur_col) {
+    this->cur_col = cur_col;
+}
+
+void control::set_top_line (int top_line) {
+    this->top_line = top_line;
+}
+
 /* Move cursor in the x direction */
 void control::move_x (int delta_x) {
     /* Increment delta x */

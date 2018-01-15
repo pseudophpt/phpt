@@ -94,6 +94,85 @@ int handle::move_right (void)
     return 1;
 }
 
+/* Jump to next word */
+int handle::next_word (void) {
+    buffer b;
+    control c;
+    
+    c.move_x(1);
+    
+    /* Line won't change, so we evaluate it once here */
+    std::string line = b.get_text_buffer()[c.get_cur_line()];
+    
+    while (line[c.get_cur_col()] != ' ' && (c.get_cur_col() < line.size())) {
+        c.move_x(1);
+    }
+    
+    c.move_x(1);
+    
+    return 1;
+}
+
+/* Jump to previous word */
+int handle::prev_word (void) {
+    buffer b;
+    control c;
+    
+    c.move_x(-1);
+    
+    /* Line won't change, so we evaluate it once here */
+    std::string line = b.get_text_buffer()[c.get_cur_line()];
+    
+    while (line[c.get_cur_col()] != ' ' && (c.get_cur_col() > 0)) {
+        c.move_x(-1);
+    }
+    
+    c.move_x(1);
+    
+    return 1;
+}
+
+/* Jump to beginning of line */
+int handle::start_line (void) {
+    control c;
+    
+    c.set_cur_col(0);
+    
+    return 1;
+}
+
+/* Jump to end of line */
+int handle::end_line (void) {
+    control c;
+    buffer b;
+    
+    c.set_cur_col(b.get_line_size(c.get_cur_line()));
+    
+    return 1;
+}
+
+/* Jump to beginning of buffer */
+int handle::start_buffer (void) {
+    control c;
+    
+    c.set_cur_col(0);
+    c.set_cur_line(0);
+    
+    return 1;
+}
+
+/* Jump to end of buffer */
+int handle::end_buffer (void) {
+    control c;
+    buffer b;
+    
+    c.set_cur_line(b.get_size() - 1);
+    c.set_cur_col(b.get_line_size(c.get_cur_line()));
+    
+    return 1;
+}
+
+
 /* This initializes all handling functions */
 void handle::init (void) {
     /* Set the handler to command, default */
@@ -101,14 +180,13 @@ void handle::init (void) {
     
     /* Set modes */
     command::handle_map[KEY_F(1)] = set_command;
-    
-    command::handle_map[KEY_F(1)] = set_command;
     command::handle_map[KEY_F(2)] = set_modify;
     
-    modify::handle_map[KEY_F(2)] = set_command;
+    modify::handle_map[KEY_F(1)] = set_command;
     modify::handle_map[KEY_F(2)] = set_modify;
     
     /* Simple actions */
+    modify::handle_map[KEY_BACKSPACE] = backspace;
     modify::handle_map[KEY_DC] = del;
     modify::handle_map['\n'] = enter;
     
@@ -130,6 +208,13 @@ void handle::init (void) {
     command::handle_map['k'] = move_down;
     command::handle_map['j'] = move_left;
     command::handle_map[';'] = move_right;
+    
+    command::handle_map['5'] = start_buffer;
+    command::handle_map['6'] = start_line;
+    command::handle_map['7'] = prev_word;
+    command::handle_map['8'] = next_word;
+    command::handle_map['9'] = end_line;
+    command::handle_map['0'] = end_buffer;
 }
 
 /* This sets the handler */
@@ -213,23 +298,19 @@ int handle::modify::handle_char (int c) {
     /* Return value */
     int ret = 0;
     
-    /* Normal characters  */
-    if ((c > 31) && (c < 127)) {
-        
+    /* Find handler for c */
+    auto it = handle_map.find(c);
+
+    /* If it exists, run it */
+    if (it != handle_map.end()) {
+        ret = it->second();
+    }
+    
+    else {
         b.insert_char(cur_line, cur_col, c);
         ct.move_x(1);
         
         ret = 1;
-    }
-    
-    /* Handled characters */
-    else {
-        /* Find handler for c */
-        auto it = handle_map.find(c);
-        /* If it exists, run it */
-        if (it != handle_map.end()) {
-            ret = it->second();
-        }
     }
     
     if (ret) {
@@ -243,4 +324,3 @@ int handle::modify::handle_char (int c) {
     
     return ret;
 }
-
