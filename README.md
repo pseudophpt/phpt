@@ -21,7 +21,7 @@ Command mode allows you to do many fast operations
 * `5` to go to beginning of file, `6` to go to beginning of line, `7` to go to previous word, `8` to go to next word,`9` to go to end of line, `0` to go to end of file
 * *currently unimplemented* `u` to copy line, `i` to cut, `o` to paste line, `p` to paste overwrite
 * `jkl;` arrow keys like in vim
-* *currently unimplemented* `q` to quit
+* `q` to quit
 * *currently unimplemented* `y` to find and replace [input mode]: <find term> <replace term>
 
 Press `F1` to enter this mode 
@@ -31,6 +31,8 @@ Press `F1` to enter this mode
 #### 3.10
 * Add cursor
 * Fix word movement
+###### r1 (3.11)
+* Add quit button
 
 #### 3.00
 * Complete rewrite
