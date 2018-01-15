@@ -99,8 +99,6 @@ int handle::next_word (void) {
     buffer b;
     control c;
     
-    c.move_x(1);
-    
     /* Line won't change, so we evaluate it once here */
     std::string line = b.get_text_buffer()[c.get_cur_line()];
     
@@ -123,11 +121,11 @@ int handle::prev_word (void) {
     /* Line won't change, so we evaluate it once here */
     std::string line = b.get_text_buffer()[c.get_cur_line()];
     
-    while (line[c.get_cur_col()] != ' ' && (c.get_cur_col() > 0)) {
+    while (line[c.get_cur_col() - 1] != ' ' && (c.get_cur_col() > 0)) {
         c.move_x(-1);
     }
     
-    c.move_x(1);
+    //c.move_x(-1);
     
     return 1;
 }
@@ -215,6 +213,8 @@ void handle::init (void) {
     command::handle_map['8'] = next_word;
     command::handle_map['9'] = end_line;
     command::handle_map['0'] = end_buffer;
+    
+    
 }
 
 /* This sets the handler */
