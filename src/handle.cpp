@@ -13,6 +13,26 @@ std::unordered_map<int, std::function<int(void)>> handle::modify::handle_map;
 
 std::vector<std::function<std::string(void)>> handle::status_funcs;
 
+/* Status bar functions */
+
+std::string handle::status_get_lc (void) {
+    std::string lc;
+    control c;
+    
+    int line = c.get_cur_line();
+    int col = c.get_cur_col();
+    
+    lc.push_back('L');
+    lc.append(std::to_string(line));
+    
+    lc.push_back(' ');
+    
+    lc.push_back('C');
+    lc.append(std::to_string(col));
+    
+    return lc;
+}
+
 /* Helper interaction functions */
 
 /* Mode setters */
@@ -217,6 +237,11 @@ void handle::init (void) {
     command::handle_map['0'] = end_buffer;
     
     command::handle_map['q'] = quit;    
+    
+    /* Status bar elements */
+    
+    /* Line and column numbeers */
+    status_funcs.push_back(status_get_lc);
 }
 
 /* This sets the handler */
@@ -276,9 +301,13 @@ int handle::command::handle_char (int c) {
         cur_col = ct.get_cur_col();
         cur_line = ct.get_cur_line();
         top_line = ct.get_top_line();
-        std::vector<std::string> tra;
+        std::vector<std::string> status;
         
-        i.draw(text_buffer, tra, cur_line, cur_col, top_line);
+        for (std::function<std::string()> f : status_funcs ) {
+            status.push_back(f());
+        }
+        
+        i.draw(text_buffer, status, cur_line, cur_col, top_line);
     }
     
     return ret;
@@ -321,9 +350,13 @@ int handle::modify::handle_char (int c) {
         cur_col = ct.get_cur_col();
         cur_line = ct.get_cur_line();
         top_line = ct.get_top_line();
-        std::vector<std::string> tra;
+        std::vector<std::string> status;
         
-        i.draw(text_buffer, tra, cur_line, cur_col, top_line);
+        for (std::function<std::string()> f : status_funcs ) {
+            status.push_back(f());
+        }
+        
+        i.draw(text_buffer, status, cur_line, cur_col, top_line);
     }    
     
     return ret;

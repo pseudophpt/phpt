@@ -31,7 +31,7 @@ class handle
         
         static int quit (void) { return 0; }
         
-        static std::vector<std::function<std::string(void)>> status_funcs;
+        static std::string status_get_lc (void);
         
         class handler {
             public:
@@ -67,6 +67,7 @@ class handle
                 std::string get_name (void);
         };
         
+        static std::vector<std::function<std::string(void)>> status_funcs;
         static std::string clipboard;
         static std::string in;
         static handler *h;
