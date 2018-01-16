@@ -26,8 +26,7 @@ Press `F1` to enter this mode
 
 # Updates
 
-### 3.20
-* Add status bar
+### 3.20 - Add status bar
 
 ###### r1 (3.21)
 * Add line and column function for status bar
@@ -36,14 +35,11 @@ Press `F1` to enter this mode
 * Add cursor
 * Fix word movement
 
-###### r1 (3.11)
-* Add quit button
+###### r1 (3.11) - Add quit button
 
-###### r2 (3.12)
-* Add line numbers
+###### r2 (3.12) - Add line numbers
 
-###### r3 (3.13)
-* Add line number highlighting, clean up `interface.cpp`
+###### r3 (3.13) - Add line number highlighting, clean up `interface.cpp`
 
 ### 3.00
 * Complete rewrite
