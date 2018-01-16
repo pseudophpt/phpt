@@ -19,8 +19,8 @@ std::string handle::status_get_lc (void) {
     std::string lc;
     control c;
     
-    int line = c.get_cur_line();
-    int col = c.get_cur_col();
+    int line = c.get_cur_line() + 1;
+    int col = c.get_cur_col() + 1;
     
     lc.push_back('L');
     lc.append(std::to_string(line));

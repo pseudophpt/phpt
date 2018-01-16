@@ -42,7 +42,7 @@ std::string interface::format_line_number (int line) {
     std::string formatted = "";
     
     /* Current line string */
-    std::string line_number = std::to_string (line);
+    std::string line_number = std::to_string (line + 1);
     
     /* Padding */
     for (int j = 0; j < (5 - line_number.size()); j ++)
@@ -113,7 +113,7 @@ void interface::draw_bar (std::vector<std::string>& status) {
 /* Draw whole interface */
 void interface::draw (std::vector<std::string>& buffer, std::vector<std::string>& status, int cur_line, int cur_col, int top_line) {
     clear();
-    attron(COLOR_PAIR(0));
+    attron(COLOR_PAIR(1));
     
     /* Draw lines */
     int max_line = getmaxy(stdscr) - 1;
