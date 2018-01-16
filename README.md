@@ -26,10 +26,10 @@ Press `F1` to enter this mode
 
 # Updates
 
-### 3.20 - Add status bar
+### 3.20 
+* Add status bar
 
-###### r1 (3.21)
-* Add line and column function for status bar
+###### r1 (3.21) - Add line and column function for status bar
 
 ### 3.10
 * Add cursor
