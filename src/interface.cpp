@@ -58,7 +58,7 @@ std::string interface::format_line_number (int line) {
 }
 
 /* Draw a single line */
-void interface::draw_line (std::string line, int line_no, int cur_line, int cur_col) {
+void interface::draw_line (std::string& line, int line_no, int cur_line, int cur_col) {
     /* If it's the current line, get ready to highlight */
     if (line_no == cur_line) {
         /* Add line number */
@@ -93,21 +93,40 @@ void interface::draw_line (std::string line, int line_no, int cur_line, int cur_
     attron(COLOR_PAIR(1));
 }
 
+/* Draw status bar */
+void interface::draw_bar (std::vector<std::string>& status) {
+    char separator = ' ';
+    
+    for (std::string s : status) {
+        addch(separator);
+        addstr(s.c_str());
+    }
+    
+    int max_col = getmaxx(stdscr);
+    int cur_col = getcurx(stdscr);
+    
+    for (int i = cur_col; i < max_col; i ++) {
+        addch(separator);
+    }
+}
+
 /* Draw whole interface */
-void interface::draw (std::vector<std::string> buffer, int cur_line, int cur_col, int top_line) {
+void interface::draw (std::vector<std::string>& buffer, std::vector<std::string>& status, int cur_line, int cur_col, int top_line) {
     clear();
     attron(COLOR_PAIR(0));
     
     /* Draw lines */
-    for (int i = top_line; i < buffer.size(); i ++) {
+    int max_line = getmaxy(stdscr) - 1;
+    
+    for (int i = top_line; (i < buffer.size()) && (getcury(stdscr) < max_line); i ++) {
         draw_line(buffer[i], i, cur_line, cur_col);
         addch('\n');
     }
     
-    addstr(std::to_string(cur_line).c_str());
-    addch('\n');
-    addstr(std::to_string(cur_col).c_str());
-   
+    move(max_line, 0);
+    attron(COLOR_PAIR(2));
+    draw_bar(status);
+    
     /* Refresh screen and clear for next frame */
     refresh();
 }

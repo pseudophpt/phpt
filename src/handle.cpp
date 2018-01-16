@@ -11,6 +11,8 @@ handle::handler *handle::h;
 std::unordered_map<int, std::function<int(void)>> handle::command::handle_map;
 std::unordered_map<int, std::function<int(void)>> handle::modify::handle_map;
 
+std::vector<std::function<std::string(void)>> handle::status_funcs;
+
 /* Helper interaction functions */
 
 /* Mode setters */
@@ -274,8 +276,9 @@ int handle::command::handle_char (int c) {
         cur_col = ct.get_cur_col();
         cur_line = ct.get_cur_line();
         top_line = ct.get_top_line();
+        std::vector<std::string> tra;
         
-        i.draw(text_buffer, cur_line, cur_col, top_line);
+        i.draw(text_buffer, tra, cur_line, cur_col, top_line);
     }
     
     return ret;
@@ -318,8 +321,9 @@ int handle::modify::handle_char (int c) {
         cur_col = ct.get_cur_col();
         cur_line = ct.get_cur_line();
         top_line = ct.get_top_line();
+        std::vector<std::string> tra;
         
-        i.draw(text_buffer, cur_line, cur_col, top_line);
+        i.draw(text_buffer, tra, cur_line, cur_col, top_line);
     }    
     
     return ret;

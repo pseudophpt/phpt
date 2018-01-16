@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <functional>
 #include <ncurses.h>
+#include <vector>
 
 class handle 
 {   
@@ -29,6 +30,8 @@ class handle
         static int end_buffer (void);
         
         static int quit (void) { return 0; }
+        
+        static std::vector<std::function<std::string(void)>> status_funcs;
         
         class handler {
             public:
