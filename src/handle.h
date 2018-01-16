@@ -29,9 +29,13 @@ class handle
         static int start_buffer (void);
         static int end_buffer (void);
         
+        static int scr_up (void); 
+        static int scr_down (void); 
+        
         static int quit (void) { return 0; }
         
         static std::string status_get_lc (void);
+        static std::string status_percentage (void);
         
         class handler {
             public:

@@ -33,6 +33,21 @@ std::string handle::status_get_lc (void) {
     return lc;
 }
 
+/* Percentage function */
+
+std::string handle::status_percentage (void) {
+    std::string p;
+    buffer b;
+    control c;
+    
+    int top_line = c.get_top_line();
+    p = std::to_string(top_line * 100 / b.get_size());
+    
+    p.push_back('%');
+    
+    return p;
+}
+
 /* Helper interaction functions */
 
 /* Mode setters */
@@ -192,6 +207,23 @@ int handle::end_buffer (void) {
     return 1;
 }
 
+/* Scroll down */
+int handle::scr_down (void) {
+    control c;
+    
+    c.scr(1);
+    
+    return 1;
+}
+
+/* Scroll up */
+int handle::scr_up (void) {
+    control c;
+    
+    c.scr(-1);
+    
+    return 1;
+}
 
 /* This initializes all handling functions */
 void handle::init (void) {
@@ -238,10 +270,17 @@ void handle::init (void) {
     
     command::handle_map['q'] = quit;    
     
+    command::handle_map[KEY_NPAGE] = scr_down;
+    command::handle_map[KEY_PPAGE] = scr_up;
+    
+    modify::handle_map[KEY_NPAGE] = scr_down;
+    modify::handle_map[KEY_PPAGE] = scr_up;
+    
     /* Status bar elements */
     
     /* Line and column numbeers */
     status_funcs.push_back(status_get_lc);
+    status_funcs.push_back(status_percentage);
 }
 
 /* This sets the handler */
