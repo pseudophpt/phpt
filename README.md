@@ -31,6 +31,8 @@ Press `F1` to enter this mode
 
 ###### r1 (3.21) - Add line and column function for status bar
 
+###### r2 (3.22) - Fix line and column numbers, add percentage, add scrolling functionality
+
 ### 3.10
 * Add cursor
 * Fix word movement
