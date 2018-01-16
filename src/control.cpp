@@ -90,8 +90,13 @@ void control::scr (int amount) {
     /* Increment top line */
     top_line += amount;
     
+    buffer b;
+    
     /* Error correcting */
     if (top_line < 0)
         top_line = 0;
+    
+    if (top_line >= b.get_size())
+        top_line = b.get_size() - 1;
 }
 
