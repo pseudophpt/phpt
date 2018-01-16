@@ -26,6 +26,9 @@ Press `F1` to enter this mode
 
 # Updates
 
+### 3.20
+* Add status bar
+
 ### 3.10
 * Add cursor
 * Fix word movement
