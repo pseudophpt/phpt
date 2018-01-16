@@ -29,6 +29,9 @@ Press `F1` to enter this mode
 ### 3.20
 * Add status bar
 
+###### r1 (3.21)
+* Add line and column function for status bar
+
 ### 3.10
 * Add cursor
 * Fix word movement
