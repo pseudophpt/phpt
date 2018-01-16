@@ -5,7 +5,7 @@ SRC_DIR = ./src
 OBJ_DIR = ./obj
 BIN_DIR = ./bin
 
-VERSION = 3.20
+VERSION = 3.21
 
 SRC_FILES := $(wildcard $(SRC_DIR)/*.cpp)
 OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
