@@ -244,6 +244,97 @@ int handle::tab (void) {
     return 1;
 }
 
+/* Autocomplete brackets */
+int handle::auto_curly (void) {
+    buffer b;
+    control c;
+    
+    int cur_line = c.get_cur_line();
+    int cur_col = c.get_cur_col();
+    
+    /* Insert both */
+    b.insert_char(cur_line, cur_col, '{');
+    b.insert_char(cur_line, cur_col + 1, '}');
+    c.move_x(1);
+    return 1;
+}
+
+int handle::auto_square (void) {
+    buffer b;
+    control c;
+    
+    int cur_line = c.get_cur_line();
+    int cur_col = c.get_cur_col();
+    
+    /* Insert both */
+    b.insert_char(cur_line, cur_col, '[');
+    b.insert_char(cur_line, cur_col + 1, ']');
+    c.move_x(1);
+    return 1;
+}
+
+int handle::auto_parentheses (void) {
+    buffer b;
+    control c;
+    
+    int cur_line = c.get_cur_line();
+    int cur_col = c.get_cur_col();
+    
+    /* Insert both */
+    b.insert_char(cur_line, cur_col, '(');
+    b.insert_char(cur_line, cur_col + 1, ')');
+    c.move_x(1);
+    return 1;
+}
+
+/* Closing brackets should not be repeated */
+int handle::auto_curly_close (void) {
+    buffer b;
+    control c;
+    
+    int cur_line = c.get_cur_line();
+    int cur_col = c.get_cur_col();
+    
+    if (b.get_text_buffer()[cur_line][cur_col] != '}') {
+        b.insert_char(cur_line, cur_col, '}');
+    }
+    
+    c.move_x(1);
+    return 1;
+}
+
+/* Closing brackets should not be repeated */
+int handle::auto_square_close (void) {
+    buffer b;
+    control c;
+    
+    int cur_line = c.get_cur_line();
+    int cur_col = c.get_cur_col();
+    
+    if (b.get_text_buffer()[cur_line][cur_col] != ']') {
+        b.insert_char(cur_line, cur_col, ']');
+    }
+    
+    c.move_x(1);
+    return 1;
+}
+
+/* Closing brackets should not be repeated */
+int handle::auto_parentheses_close (void) {
+    buffer b;
+    control c;
+    
+    int cur_line = c.get_cur_line();
+    int cur_col = c.get_cur_col();
+    
+    if (b.get_text_buffer()[cur_line][cur_col] != ')') {
+        b.insert_char(cur_line, cur_col, ')');
+    }
+    
+    c.move_x(1);
+    return 1;
+}
+
 /* This initializes all handling functions */
 void handle::init (void) {
     /* Set the handler to command, default */
@@ -296,6 +387,16 @@ void handle::init (void) {
     modify::handle_map[KEY_PPAGE] = scr_up;
     
     modify::handle_map['\t'] = tab;
+    
+    /* Autocomplete */
+    
+    modify::handle_map['('] = auto_parentheses;
+    modify::handle_map['['] = auto_square;
+    modify::handle_map['{'] = auto_curly;
+    
+    modify::handle_map[')'] = auto_parentheses_close;
+    modify::handle_map[']'] = auto_square_close;
+    modify::handle_map['}'] = auto_curly_close;
     
     /* Status bar elements */
     

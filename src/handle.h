@@ -32,6 +32,14 @@ class handle
         static int scr_up (void); 
         static int scr_down (void); 
         
+        static int auto_curly (void);
+        static int auto_square (void);
+        static int auto_parentheses (void);
+        
+        static int auto_curly_close (void);
+        static int auto_square_close (void);
+        static int auto_parentheses_close (void);
+        
         static int tab (void);
         
         static int quit (void) { return 0; }
