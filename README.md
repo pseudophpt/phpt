@@ -33,6 +33,8 @@ Press `F1` to enter this mode
 
 ###### r2 (3.22) - Fix line and column numbers, add percentage, add scrolling functionality
 
+###### r3 (3.23) - Fix tab, add autocompleting brackets, add mode status
+
 ### 3.10
 * Add cursor
 * Fix word movement
