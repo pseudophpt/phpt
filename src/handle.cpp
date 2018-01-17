@@ -34,7 +34,6 @@ std::string handle::status_get_lc (void) {
 }
 
 /* Percentage function */
-
 std::string handle::status_percentage (void) {
     std::string p;
     buffer b;
@@ -46,6 +45,11 @@ std::string handle::status_percentage (void) {
     p.push_back('%');
     
     return p;
+}
+
+/* Get mode name */
+std::string handle::status_get_mode (void) {
+    return get_name(); 
 }
 
 /* Helper interaction functions */
@@ -401,6 +405,7 @@ void handle::init (void) {
     /* Status bar elements */
     
     /* Line and column numbeers */
+    status_funcs.push_back(status_get_mode);
     status_funcs.push_back(status_get_lc);
     status_funcs.push_back(status_percentage);
 }
