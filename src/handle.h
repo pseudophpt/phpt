@@ -32,6 +32,8 @@ class handle
         static int scr_up (void); 
         static int scr_down (void); 
         
+        static int tab (void);
+        
         static int quit (void) { return 0; }
         
         static std::string status_get_lc (void);

@@ -225,6 +225,25 @@ int handle::scr_up (void) {
     return 1;
 }
 
+/* Tab */
+int handle::tab (void) {
+    buffer b;
+    control c;
+    
+    int cur_line = c.get_cur_line();
+    int cur_col = c.get_cur_col();
+    
+    /* Amount of spaces to reach next */
+    int spaces = 4 - (cur_col % 4);
+    
+    for (int i = 0; i < spaces; i ++) {
+        b.insert_char(cur_line, cur_col, ' ');
+        c.move_x(1);
+    }
+    
+    return 1;
+}
+
 /* This initializes all handling functions */
 void handle::init (void) {
     /* Set the handler to command, default */
@@ -275,6 +294,8 @@ void handle::init (void) {
     
     modify::handle_map[KEY_NPAGE] = scr_down;
     modify::handle_map[KEY_PPAGE] = scr_up;
+    
+    modify::handle_map['\t'] = tab;
     
     /* Status bar elements */
     
